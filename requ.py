@@ -9,5 +9,5 @@ tags = soup.select("#_per")
 tags2 = soup.select("#_dvr")
 tag = tags[0]
 tag2 = tags2[0]
-print(tag.tex)
+print(tag.text)
 print(tag2.text)
