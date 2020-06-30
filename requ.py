@@ -1,0 +1,13 @@
+import requests
+from bs4 import BeautifulSoup
+
+url = "https://finance.naver.com/item/main.nhn?code=000660"
+html = requests.get(url).text
+
+soup = BeautifulSoup(html,"html5lib")
+tags = soup.select("#_per")
+tags2 = soup.select("#_dvr")
+tag = tags[0]
+tag2 = tags2[0]
+print(tag.tex)
+print(tag2.text)
