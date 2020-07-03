@@ -1,5 +1,5 @@
 import pyupbit
 
-btc = pyupbit.get_ohlcv("KRW-BTC")
+btc = pyupbit.get_ohlcv("ALL")
 low = btc['low']
 print(low)
