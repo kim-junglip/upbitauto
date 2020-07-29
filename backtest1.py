@@ -1,7 +1,10 @@
-import pyupbit
+import backtrader
 
-df = pyupbit.get_ohlcv("KRW-XRP", "minute60")
-how = {'open': 'first', 'high': 'max', 'low': 'min', 'close': 'last',
-       'volume': 'sum'}
-df = df.resample('D').apply(how)
-print(df)
+cerebro = backtrader.Cerebro()
+
+cerebro.broker.set_cash(1000000)
+print('Starting Portfolio value: %.2f' % cerebro.broker.get_value())
+
+cerebro.run()
+
+print('Final Portfolio Value: %.2f' % cerebro.broker.get_value())
