@@ -16,7 +16,6 @@ upbit = pyupbit.Upbit(key, secret)
 print(upbit.get_balances())
 
 '''
-
 변동성 돌파 목표가 계산을 위한 함수
 '''
 def get_target_price(ticker):#재사용을 위해 함수 선언
