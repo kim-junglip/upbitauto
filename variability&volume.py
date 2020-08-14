@@ -63,7 +63,7 @@ def My_Account():
     return krw
 
 while True :
-    #try :
+    try :
         '''
         오전 9시가 되면 계좌에 있는 모든 코인 소멸
         '''
@@ -129,9 +129,9 @@ while True :
                     upbit.buy_market_order(coin, 5000)
                     print("매수 완료")
 
-    #except :
-        #print("에러 발생")
-        #time.sleep(1)
+    except :
+        print("에러 발생")
+        time.sleep(1)
 
 
 
