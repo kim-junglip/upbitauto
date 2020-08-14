@@ -48,7 +48,7 @@ def get_target_price(ticker):
     today_open = yesterday['close']#당일 시가를 얻어온다.
     yesterday_high = yesterday['high']#전일 고가를 얻어온다.
     yesterday_low = yesterday['low']#전일 저가를 얻어온다.
-    target = today_open + (yesterday_high - yesterday_low)*0.5#변동성 돌파 목표가 계산
+    target = today_open + (yesterday_high - yesterday_low)*0.3#변동성 돌파 목표가 계산
     return target
 
 '''
@@ -63,7 +63,57 @@ def My_Account():
     return krw
 
 while True :
-    try :
+    #try :
+        '''
+        오전 9시가 되면 계좌에 있는 모든 코인 소멸
+        '''
+        now = datetime.datetime.now()#현재 시간 조회
+        mid = datetime.datetime(now.year, now.month, now.day, 9)  # 오전 9시를 고정으로 잡는다.
+
+        sel_1 = []
+        sel_cur = []
+        sel_avg = []
+        selper = []
+        for i in range(len(upbit.get_balances()[0])) :
+            sel_1.append(upbit.get_balances()[0][i])
+            sel_cur.append("KRW-" + sel_1[i].get('currency'))
+            change = sel_cur
+            sel_avg.append(sel_1[i].get('avg_buy_price'))
+            selper = sel_avg
+            j = selper[i]
+            sell = float(j) * 0.97
+            sell_now = pyupbit.get_current_price(change[i])
+            #print(change)
+            #print(sell_now)
+
+        if mid < now < mid + datetime.timedelta(seconds=10) :
+            print("매도하자")
+            krw_1 = []
+            krw_cur = []
+            krw_bal = []
+            total = []
+            for i in range(len(upbit.get_balances()[0])) :
+                krw_1.append(upbit.get_balances()[0][i])
+                krw_cur.append("KRW-" + krw_1[i].get('currency'))
+                krw_bal.append(krw_1[i].get('balance'))
+                total = krw_cur, krw_bal
+                upbit.sell_market_order(total[0][i], total[1][i])#해당 코인을 시장가로 매도
+
+        elif sell_now != None:
+            if sell > float(sell_now) :
+                print("매도하자")
+                krw_1 = []
+                krw_cur = []
+                krw_bal = []
+                total = []
+                for i in range(len(upbit.get_balances()[0])) :
+                    krw_1.append(upbit.get_balances()[0][i])
+                    krw_cur.append("KRW-" + krw_1[i].get('currency'))
+                    krw_bal.append(krw_1[i].get('balance'))
+                    total = krw_cur, krw_bal
+                    upbit.sell_market_order(total[0][i], total[1][i])
+
+
         '''
         거래량 기준 상위 코인 변동성 돌파로 매수
         '''
@@ -78,25 +128,10 @@ while True :
                 if current_price > target_price:
                     upbit.buy_market_order(coin, 5000)
                     print("매수 완료")
-        '''
-        오전 9시가 되면 계좌에 있는 모든 코인 소멸
-        '''
-        now = datetime.datetime.now()#현재 시간 조회
-        mid = datetime.datetime(now.year, now.month, now.day, 9)  # 오전 9시를 고정으로 잡는다.
-        if mid < now < mid + datetime.timedelta(seconds=10):
-            krw_1 = []
-            krw_cur = []
-            krw_bal = []
-            total = []
-            for i in range(len(upbit.get_balances())) :
-                krw_1.append(upbit.get_balances()[0][i+1])
-                krw_cur.append("KRW-" + krw_1[i].get('currency'))
-                krw_bal.append(krw_1[i].get('balance'))
-                total = krw_cur, krw_bal
-                upbit.sell_market_order(total[0][i], total[1][i])#해당 코인을 시장가로 매도
-    except :
-        print("에러 발생")
-        time.sleep(1)
+
+    #except :
+        #print("에러 발생")
+        #time.sleep(1)
 
 
 

@@ -27,15 +27,6 @@ def get_target_price(ticker):#재사용을 위해 함수 선언
     target = today_open + (yesterday_high - yesterday_low)#변동성 돌파 목표가 계산
     return target
 
-'''
-매수 함수
-'''
-def buy_crypto_currency(ticker):
-    krw = upbit.get_balances(ticker)[2]#내 잔고 조회
-    #orderbook = pyupbit.get_orderbook(ticker)#최우선 매도 호가 조회
-    #sell_price = orderbook['asks'][0]['price']#asks(매도호가) [0](첫번째) price(가격)
-    #unit = krw / float(sell_price) #내 잔고 / 첫번째 매도 호가
-    upbit.buy_market_order(ticker, 10000)#해당 코인을 시장가로 매수
 
 '''
 매도 함수
