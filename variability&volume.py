@@ -48,7 +48,7 @@ def get_target_price(ticker):
     today_open = yesterday['close']#당일 시가를 얻어온다.
     yesterday_high = yesterday['high']#전일 고가를 얻어온다.
     yesterday_low = yesterday['low']#전일 저가를 얻어온다.
-    target = today_open + (yesterday_high - yesterday_low)*0.4#변동성 돌파 목표가 계산
+    target = today_open + (yesterday_high - yesterday_low)*0.3#변동성 돌파 목표가 계산
     return target
 
 '''
@@ -69,23 +69,28 @@ while True :
         '''
         now = datetime.datetime.now()#현재 시간 조회
         mid = datetime.datetime(now.year, now.month, now.day, 9)  # 오전 9시를 고정으로 잡는다.
-        '''
+
         sel_1 = []
         sel_cur = []
         sel_avg = []
+        sel_bal = []
         selper = []
+        sell_now = []
         for i in range(len(upbit.get_balances()[0])) :
             sel_1.append(upbit.get_balances()[0][i])
             sel_cur.append("KRW-" + sel_1[i].get('currency'))
             change = sel_cur
+            sell_now.append(pyupbit.get_current_price(change[i]))
             sel_avg.append(sel_1[i].get('avg_buy_price'))
             selper = sel_avg
             j = selper[i]
-            sell = float(j) * 0.97
-            sell_now = pyupbit.get_current_price(change[i])
-        '''
-
-        if mid < now < mid + datetime.timedelta(minutes=2) :
+            sell = float(j) * 0.98
+            sel_bal.append(sel_1[i].get('balance'))
+            selbal = sel_bal
+            sell_total = change, selper, sell_now, selbal
+            #print(sell_total[2])
+            #print(sell_total)
+        if mid < now < mid + datetime.timedelta(minutes=1) :
             print("매도하자")
             krw_1 = []
             krw_cur = []
@@ -97,16 +102,24 @@ while True :
                 krw_bal.append(krw_1[i].get('balance'))
                 total = krw_cur, krw_bal
                 upbit.sell_market_order(total[0][i], total[1][i])#해당 코인을 시장가로 매도
-        '''
+
         elif sell_now != None:
-            if sell > float(sell_now) :
-                print("매도하자")
+            for i in range(len(upbit.get_balances()[0])) :
+                if i >=1 :
+                    sell_total1 = float(sell_total[1][i])
+                    sell_total2 = float(sell_total[2][i])
+                    if sell_total1 > sell_total2 :
+                        print("매도하자")
+                        upbit.sell_market_order(sell_total[0][i], sell_total[3][i])
+                #if float(sell_total[1][i]) > float(sell_total[2][i]) :
+                    #print("매도하자")
+                '''
                 sel_1 = []
                 sel_cur = []
                 sel_avg = []
                 sel_bal = []
                 selper = []
-                for i in range(len(upbit.get_balances()[0])) :
+            for i in range(len(upbit.get_balances()[0])) :
                     sel_1.append(upbit.get_balances()[0][i])
                     sel_cur.append("KRW-" + sel_1[i].get('currency'))
                     change = sel_cur
@@ -118,8 +131,9 @@ while True :
                     sell_now = pyupbit.get_current_price(change[i])
                     if sell > float(sell_now) :
                         total = sel_cur, sel_bal
-                        upbit.sell_market_order(total[0][i], total[1][i])
-        '''
+                '''
+
+
 
 
         '''
@@ -139,7 +153,6 @@ while True :
 
     except :
         print("에러 발생")
-        time.sleep(1)
     time.sleep(10)
 
 
