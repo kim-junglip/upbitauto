@@ -76,6 +76,7 @@ while True :
         sel_bal = []
         selper = []
         sell_now = []
+        sell = []
         for i in range(len(upbit.get_balances()[0])) :
             sel_1.append(upbit.get_balances()[0][i])
             sel_cur.append("KRW-" + sel_1[i].get('currency'))
@@ -84,11 +85,11 @@ while True :
             sel_avg.append(sel_1[i].get('avg_buy_price'))
             selper = sel_avg
             j = selper[i]
-            sell = float(j) * 0.98
+            sell.append(float(j) * 0.98)
             sel_bal.append(sel_1[i].get('balance'))
             selbal = sel_bal
-            sell_total = change, selper, sell_now, selbal
-            #print(sell_total[2])
+            sell_total = change, sell, sell_now, selbal
+            #print(sell_total[1])
             #print(sell_total)
         if mid < now < mid + datetime.timedelta(minutes=1) :
             print("매도하자")
@@ -132,10 +133,6 @@ while True :
                     if sell > float(sell_now) :
                         total = sel_cur, sel_bal
                 '''
-
-
-
-
         '''
         거래량 기준 상위 코인 변동성 돌파로 매수
         '''
