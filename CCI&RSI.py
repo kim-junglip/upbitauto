@@ -27,12 +27,13 @@ while True :
             cci_total_yesterday_buy.append(int(cci_buy[-2]))
 
             if cci_total_yesterday_buy[i] <= 110 < cci_total_today_buy[i] :
+                print("매수시작")
                 my_coin_buy = []
                 coin_list = []
                 for j in range(len(upbit.get_balances()[0])) :
                     coin_list.append(upbit.get_balances()[0][j])
                     my_coin_buy.append("KRW-" + coin_list[j].get('currency'))
-                    if my_coin_buy.count(coin_buy[i]) == 1 and j >= 1 :
+                    if my_coin_buy.count(coin_buy[i]) == 0 and j >= 1 :
                         upbit.buy_market_order(coin_buy[i], 5000)
                         print(coin_buy[i] + ":", "매수")
     except :
@@ -70,8 +71,9 @@ while True :
                 cci_total_yesterday_sell.append(int(cci_sell[-2]))
 
 
-                if rsi_total_yesterday_sell[x-1] >= 70 < rsi_total_today_sell[x-1] \
-                        and cci_total_yesterday_sell[x-1] >= 100 < cci_total_today_buy[x-1] :
+                if rsi_total_yesterday_sell[x-1] >= 70 > rsi_total_today_sell \
+                        or cci_total_yesterday_sell[x-1] >= 100 < cci_total_today_buy[x-1] :
+                    print(sell_cur[x-1]+":", "매도완료")
                     upbit.sell_market_order(total_sell[0][x-1], total_sell[1][x-1])
 
     except :
