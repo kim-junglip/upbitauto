@@ -48,7 +48,7 @@ def get_target_price(ticker):
     today_open = yesterday['close']#당일 시가를 얻어온다.
     yesterday_high = yesterday['high']#전일 고가를 얻어온다.
     yesterday_low = yesterday['low']#전일 저가를 얻어온다.
-    target = today_open + (yesterday_high - yesterday_low)*0.3#변동성 돌파 목표가 계산
+    target = today_open + (yesterday_high - yesterday_low)*0.5#변동성 돌파 목표가 계산
     return target
 
 '''
@@ -85,13 +85,13 @@ while True :
             sel_avg.append(sel_1[i].get('avg_buy_price'))
             selper = sel_avg
             j = selper[i]
-            sell.append(float(j) * 0.98)
+            sell.append(float(j) * 0.97)
             sel_bal.append(sel_1[i].get('balance'))
             selbal = sel_bal
             sell_total = change, sell, sell_now, selbal
             #print(sell_total[1])
             #print(sell_total)
-        if mid < now < mid + datetime.timedelta(minutes=1) :
+        if mid < now < mid + datetime.timedelta(minutes=2) :
             print("매도하자")
             krw_1 = []
             krw_cur = []
@@ -139,7 +139,7 @@ while True :
         FirstfilterList = firstfilter() #속도를 위해 모든 값을 넘겨준다
         for i in range(len(firstfilter())-1,0,-1) :
             j = FirstfilterList[i] # 상위 10개의 코인을 하나씩 j에 넣는다.
-            if My_Account().count(j) == 0 : #내 계좌에 있는 코인과 비교한다.
+            if My_Account().count(j) == 0 : #내 계좌에 있는 코인과 비교한다.up
                 coin = FirstfilterList[i] #순서대로 넘겨준다.
                 target_price = get_target_price(coin)
                 print(coin, target_price)
